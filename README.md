@@ -35,6 +35,10 @@ create policy "users_insert_own_notes"
   with check (auth.uid() = user_id);
 ```
 
+### How this proves RLS
+
+The proof is not in the UI itself. With Supabase configured and a user logged in via Supabase Auth, the frontend calls `.select('*')` with no `user_id` filter. The database applies the RLS policy and returns only rows where `auth.uid() = user_id`. So the same query would return different rows for different users; the frontend does not and cannot request another user's notes. Mock mode (`NEXT_PUBLIC_MOCK_MODE=true`) only lets you see the interface without Supabase; it does not demonstrate RLS.
+
 ### Core Logic
 
 The client never sends a `WHERE user_id = ?` in the query. RLS evaluates `auth.uid()` on each request and applies the policy conditions server-side. SELECT returns only rows where `user_id` matches the authenticated user; INSERT is allowed only when the row’s `user_id` equals `auth.uid()`. Keeping this logic in the database reduces the risk of leaking data if the frontend is wrong or bypassed, and keeps the application code simple.
@@ -97,6 +101,10 @@ create policy "users_insert_own_notes"
   for insert
   with check (auth.uid() = user_id);
 ```
+
+### Como isso prova o RLS
+
+A prova não está na tela. Com Supabase configurado e um usuário logado via Supabase Auth, o frontend chama `.select('*')` sem filtro de `user_id`. O banco aplica a política de RLS e devolve só as linhas em que `auth.uid() = user_id`. Ou seja, a mesma query devolve resultados diferentes por usuário; o frontend não pede e não consegue pedir as notas de outro usuário. O modo mock (`NEXT_PUBLIC_MOCK_MODE=true`) só serve para ver a interface sem Supabase e não demonstra RLS.
 
 ### Lógica central
 
