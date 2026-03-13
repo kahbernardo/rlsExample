@@ -69,6 +69,30 @@ Sem esse passo a tabela `notes` não existe e o app não consegue listar nem sal
 
 Se a confirmação de e-mail estiver ligada, você precisaria abrir o link que o Supabase manda no e-mail antes de conseguir entrar no app.
 
+**Opcional — Entrar com Google:** o app tem botão “Entrar com Google”. Para funcionar: em **Authentication** > **Providers**, ative **Google**, configure no Google Cloud Console (Client ID e Client Secret) e adicione `http://localhost:3000` nas **Redirect URLs** do Supabase (Authentication > URL Configuration). Se não configurar, use e-mail e senha.
+
+### 3.1 Passo a passo no Google Cloud Console (Entrar com Google)
+
+1. Acesse [console.cloud.google.com](https://console.cloud.google.com) e faça login na conta Google.
+2. No seletor de projeto (topo da página), clique e escolha **Novo projeto**. Dê um nome (ex.: `rls-poc-auth`) e clique em **Criar**. Aguarde e selecione esse projeto.
+3. No menu lateral (três traços), vá em **APIs e serviços** > **Credenciais**.
+4. Clique em **+ Criar credenciais** e escolha **ID do cliente OAuth**.
+5. Se pedir **Configurar a tela de consentimento**:
+   - Em **Tipo de usuário**, escolha **Externo** e clique em **Criar**.
+   - Preencha **Nome do app** (ex.: "Notas Secretas") e **E-mail de suporte do usuário** (seu e-mail). Em **Domínios autorizados** pode deixar em branco para teste local.
+   - Clique em **Salvar e continuar** até voltar para Credenciais.
+6. De novo: **+ Criar credenciais** > **ID do cliente OAuth**.
+7. Em **Tipo de aplicativo**, escolha **Aplicativo da Web**.
+8. **Nome**: ex. "Notas Secretas Web".
+9. Em **URIs de redirecionamento autorizados**, clique em **+ Adicionar URI** e cole a URL de callback do Supabase:
+   - No Supabase: **Authentication** > **Providers** > **Google** (ative o provider primeiro). O Supabase mostra algo como **Callback URL (for OAuth)** ou **Authorized redirect URI**. Copie essa URL (formato `https://SEU-PROJECT-REF.supabase.co/auth/v1/callback`).
+   - Cole exatamente essa URL no Google (uma linha, sem espaço).
+10. Clique em **Criar**. Anote o **ID do cliente** e o **Segredo do cliente** (ou baixe o JSON).
+11. No Supabase: **Authentication** > **Providers** > **Google**. Cole o **Client ID** e o **Client Secret** nos campos e salve.
+12. No Supabase: **Authentication** > **URL Configuration**. Em **Redirect URLs**, adicione `http://localhost:3000` (e, se for publicar, a URL de produção) e salve.
+
+Depois disso, o botão "Entrar com Google" no app deve redirecionar para o Google e voltar logado.
+
 ---
 
 ## 4. Pegar URL e chave do projeto e configurar o app
@@ -220,6 +244,30 @@ Without this step the `notes` table doesn’t exist and the app can’t list or 
 4. If there’s a **Save** button, click it.
 
 If email confirmation is on, you’d have to open the link Supabase sends before you can sign in.
+
+**Optional — Sign in with Google:** the app has an “Entrar com Google” button. To use it: in **Authentication** > **Providers**, enable **Google**, set up Google Cloud Console (Client ID and Client Secret), and add `http://localhost:3000` to **Redirect URLs** in Supabase (Authentication > URL Configuration). If not configured, use email and password.
+
+### 3.1 Step-by-step in Google Cloud Console (Sign in with Google)
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com) and sign in.
+2. In the project selector (top of the page), click and choose **New project**. Name it (e.g. `rls-poc-auth`), click **Create**, then select that project.
+3. In the left menu (hamburger), go to **APIs & services** > **Credentials**.
+4. Click **+ Create credentials** and choose **OAuth client ID**.
+5. If it asks to **Configure the consent screen**:
+   - Under **User type**, choose **External** and click **Create**.
+   - Fill **App name** (e.g. "Secret Notes") and **User support email**. You can leave **Authorized domains** empty for local testing.
+   - Click **Save and continue** until you're back at Credentials.
+6. Again: **+ Create credentials** > **OAuth client ID**.
+7. Under **Application type**, choose **Web application**.
+8. **Name**: e.g. "Secret Notes Web".
+9. Under **Authorized redirect URIs**, click **+ Add URI** and paste the Supabase callback URL:
+   - In Supabase: **Authentication** > **Providers** > **Google** (enable the provider first). Supabase shows **Callback URL (for OAuth)** or **Authorized redirect URI**. Copy that URL (format `https://YOUR-PROJECT-REF.supabase.co/auth/v1/callback`).
+   - Paste it exactly in the Google field (one line, no extra spaces).
+10. Click **Create**. Copy the **Client ID** and **Client secret** (or download the JSON).
+11. In Supabase: **Authentication** > **Providers** > **Google**. Paste **Client ID** and **Client secret** and save.
+12. In Supabase: **Authentication** > **URL Configuration**. Under **Redirect URLs**, add `http://localhost:3000` (and your production URL if you deploy), then save.
+
+After that, the "Sign in with Google" button in the app should redirect to Google and come back signed in.
 
 ---
 

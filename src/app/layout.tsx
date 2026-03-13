@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import { ThemeSwitcher } from "@/components/themeSwitcher";
+import { AppHeader } from "@/components/appHeader";
+import { LanguageProvider } from "@/contexts/languageContext";
+import { RlsStatusProvider } from "@/contexts/rlsStatusContext";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -10,7 +12,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Notas Secretas - RLS PoC",
+  title: "Validação RLS - PoC",
   description: "Prova de conceito Row-Level Security com Next.js e Supabase",
 };
 
@@ -29,10 +31,14 @@ export default function RootLayout({
             __html: `(function(){var t=localStorage.getItem('rls-example-theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.classList.add('dark');})();`,
           }}
         />
-        <header className="sticky top-0 z-10 flex items-center justify-end border-b border-border bg-surface/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-surface/80 dark:border-border dark:bg-surface/95">
-          <ThemeSwitcher />
-        </header>
-        <main className="mx-auto max-w-2xl px-4 py-8">{children}</main>
+        <LanguageProvider>
+          <RlsStatusProvider>
+            <div className="flex min-h-screen">
+              <AppHeader />
+              <main className="min-w-0 flex-1 overflow-auto px-6 py-8">{children}</main>
+            </div>
+          </RlsStatusProvider>
+        </LanguageProvider>
       </body>
     </html>
   );
